@@ -1,4 +1,4 @@
-import { Sparkles, Bell, User } from "lucide-react";
+import { Sparkles, Bell, User, CircleCheckBig } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,11 +17,9 @@ export const Header = () => {
     <header className="border-b bg-card">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link to="/" className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
-            <span className="font-mono text-xl font-semibold text-primary italic">
-              TaskFlow
-            </span>
+          <Link to="/" className="flex items-center gap-2 ">
+            <CircleCheckBig strokeWidth={3} className="w-10 h-10 text-primary "/>
+            <span className="font-bold">TaskFlow</span>
           </Link>
           
           <nav className="hidden md:flex items-center gap-6">
