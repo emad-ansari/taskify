@@ -24,9 +24,10 @@ router.post("/register", async (req, res) => {
 
 		const token = generateToken(user._id.toString(), user.email as string);
 
-		res.json({
+		res.status(201).json({
 			message: "User registered successfully",
-			data: { token, username: user.username },
+			token,
+			username: user.username,
 		});
 	} catch (err) {
 		res.status(500).json({ message: "Server error" });
@@ -53,7 +54,8 @@ router.post("/login", async (req, res) => {
 
 		res.json({
 			message: "Login successfully",
-			data: { token, username: user.username },
+			token,
+			username: user.username,
 		});
 	} catch (err) {
 		console.log("Error: ", err);
