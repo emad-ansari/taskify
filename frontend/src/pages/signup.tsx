@@ -1,27 +1,28 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { CircleCheckBig, Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Signup = () => {
+	const { isLogin, signup, signUpForm } = useAuth();
 	const navigate = useNavigate();
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		if (password !== confirmPassword) {
-			alert("Passwords do not match!");
-			return;
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isSubmitting },
+	} = signUpForm;
+
+	useEffect(() => {
+		if (isLogin) {
+			navigate("/dashboard");
 		}
-		// TODO: Implement actual signup logic
-		navigate("/");
-	};
+	}, []);
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-background px-4">
@@ -29,10 +30,13 @@ const Signup = () => {
 				<div className="space-y-6">
 					<div className="text-center space-y-2">
 						<div className="flex items-center justify-center gap-2 mb-4">
-							<Sparkles className="h-6 w-6 text-primary" />
-							<span className="font-mono text-2xl font-semibold text-primary italic">
-								TaskFlow
-							</span>
+							<Link to="/" className="flex items-center gap-2 ">
+								<CircleCheckBig
+									strokeWidth={3}
+									className="w-10 h-10 text-primary "
+								/>
+								<span className="font-bold">TaskFlow</span>
+							</Link>
 						</div>
 						<h1 className="text-3xl font-bold">
 							Create an account
@@ -42,17 +46,21 @@ const Signup = () => {
 						</p>
 					</div>
 
-					<form onSubmit={handleSubmit} className="space-y-4">
+					<form onSubmit={handleSubmit(signup)} className="space-y-4">
 						<div className="space-y-2">
 							<Label htmlFor="name">Full Name</Label>
 							<Input
 								id="name"
 								type="text"
 								placeholder="John Doe"
-								value={name}
-								onChange={(e) => setName(e.target.value)}
+								{...register("username")}
 								required
 							/>
+							{errors.username && (
+								<p className="text-xs text-destructive">
+									{errors.username.message}
+								</p>
+							)}
 						</div>
 
 						<div className="space-y-2">
@@ -61,10 +69,14 @@ const Signup = () => {
 								id="email"
 								type="email"
 								placeholder="you@example.com"
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
+								{...register("email")}
 								required
 							/>
+							{errors.email && (
+								<p className="text-xs text-desctructive">
+									{errors.email.message}
+								</p>
+							)}
 						</div>
 
 						<div className="space-y-2">
@@ -73,10 +85,14 @@ const Signup = () => {
 								id="password"
 								type="password"
 								placeholder="••••••••"
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
+								{...register("password")}
 								required
 							/>
+							{errors.password && (
+								<p className="text-xs text-destructive">
+									{errors.password.message}
+								</p>
+							)}
 						</div>
 
 						<div className="space-y-2">
@@ -87,16 +103,27 @@ const Signup = () => {
 								id="confirm-password"
 								type="password"
 								placeholder="••••••••"
-								value={confirmPassword}
-								onChange={(e) =>
-									setConfirmPassword(e.target.value)
-								}
+								{...register("confirmPassword")}
 								required
 							/>
+							{errors.confirmPassword && (
+								<p className="text-xs text-destructive">
+									{errors.confirmPassword.message}
+								</p>
+							)}
 						</div>
+						{errors.root && (
+							<p className="text-xs text-red-500 border border-red-400/30 bg-red-400/10 px-2 py-1 rounded-md">
+								{errors.root.message}
+							</p>
+						)}
 
-						<Button type="submit" className="w-full">
-							Create account
+						<Button type="submit" className="w-full cursor-pointer">
+							{isSubmitting ? (
+								<Loader2 className="h-4 w-4 animate-spin" />
+							) : (
+								"Continue"
+							)}
 						</Button>
 					</form>
 
