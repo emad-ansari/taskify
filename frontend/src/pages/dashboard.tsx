@@ -1,9 +1,8 @@
+import { useAuth } from "@/hooks/useAuth";
 import { Header } from "@/components/common/header";
 import { Footer } from "@/components/common/footer";
 import { StatCard } from "@/components/common/stat-card";
 import { PriorityBadge } from "@/components/common/priority-badge";
-import { StatusBadge } from "@/components/common/status-badge";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -11,10 +10,9 @@ import {
 	CheckCircle2,
 	AlertCircle,
 	Clock,
-	Plus,
-	List,
-	Filter,
 } from "lucide-react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const recentTasks = [
 	{
@@ -55,6 +53,14 @@ const recentTasks = [
 ];
 
 const Dashboard = () => {
+	const {isLogin} = useAuth();
+	const navigate = useNavigate();
+	
+	useEffect(() => {
+		if (!isLogin) {
+			navigate('/')
+		}
+	}, [])
 	return (
 		<div className="min-h-screen flex flex-col">
 			<Header />
@@ -100,26 +106,6 @@ const Dashboard = () => {
 								icon={Clock}
 								iconColor="bg-warning/10 text-warning"
 							/>
-						</div>
-					</section>
-
-					<section>
-						<h2 className="text-2xl font-bold mb-6">
-							Quick Actions
-						</h2>
-						<div className="flex flex-wrap gap-3">
-							<Button className="gap-2">
-								<Plus className="h-4 w-4" />
-								Add New Task
-							</Button>
-							<Button variant="outline" className="gap-2">
-								<List className="h-4 w-4" />
-								View All Tasks
-							</Button>
-							<Button variant="outline" className="gap-2">
-								<Filter className="h-4 w-4" />
-								Filter Tasks
-							</Button>
 						</div>
 					</section>
 
